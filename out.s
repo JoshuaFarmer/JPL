@@ -17,34 +17,27 @@ start:
   ret
   jmp $
 Sfib:
-  mov ax,[vars+4]
-  mov word[vars+0],ax
-  mov ax,[vars+8]
-  mov word[vars+4],ax
-  mov ax,[vars+0]
-  mov bx,[vars+4]
-  add ax,bx
-  mov word[vars+8],ax
+  mov eax,[vars+4]
+  mov dword[vars+0],eax
+  mov eax,[vars+8]
+  mov dword[vars+4],eax
+  mov eax,[vars+0]
+  mov ebx,[vars+4]
+  add eax,ebx
+  mov dword[vars+8],eax
   ret
   jmp $
 Smain:
 M0:
-  mov ax,1
-  mov bx,1
-  cmp ax,bx
+  mov eax,1
+  mov ebx,1
+  cmp eax,ebx
   setz al
   jnz M1
-  mov ax,[vars+0]
-  mov bx,20
-  cmp ax,bx
-  setz al
-  jnz M2
-  ret
-M2:
-  mov ax,[vars+0]
-  mov bx,1
-  add ax,bx
-  mov word[vars+0],ax
+  mov eax,[vars+0]
+  mov ebx,1
+  add eax,ebx
+  mov dword[vars+0],eax
   jmp M0
 M1:
   ret
