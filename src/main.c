@@ -227,8 +227,19 @@ void expr()
         }
 }
 
+void getArch(const char * path)
+{
+        int len = strnlen(path,100);
+        char p[len+4];
+        strcpy(p,path);
+        strcat(p,".ad");
+
+        printf("ARCH: %s\n",p);
+}
+
 int main(int argc, char ** argv) {
-        if (argc != 3) return 1;
+        if (argc != 4) return 1;
+        getArch(argv[3]);
         FILE * fp = fopen(argv[1],"r");
         fout = fopen(argv[2],"wb");
         if (!fp||!fout) return -2;
