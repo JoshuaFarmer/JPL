@@ -1,25 +1,37 @@
 start:
-  call Saaa
+  call Smain
   jmp $
-Saaa:
-  mov ax,[vars+0]
-  mov bx,1
-  cmp ax,bx
-  setz al
-  jnz M0
+Sfib:
   mov ax,[vars+4]
-  mov bx,2
-  cmp ax,bx
-  setz al
-  jnz M1
+  mov word[vars+0],ax
+  mov ax,[vars+8]
+  mov word[vars+4],ax
   mov ax,[vars+0]
   mov bx,[vars+4]
   add ax,bx
   mov word[vars+8],ax
-  mov ax,[vars+12]
-  add word[vars+8],ax
-M1:
+  ret
+  jmp $
+Smain:
 M0:
+  mov ax,1
+  mov bx,1
+  cmp ax,bx
+  setz al
+  jnz M1
+  mov ax,[vars+0]
+  mov bx,20
+  cmp ax,bx
+  setz al
+  jnz M2
+  ret
+M2:
+  mov ax,[vars+0]
+  mov bx,1
+  add ax,bx
+  mov word[vars+0],ax
+  jmp M0
+M1:
   ret
   jmp $
 vars:

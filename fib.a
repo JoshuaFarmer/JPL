@@ -1,0 +1,5 @@
+subroutine fib
+        a:=b
+        b:=c
+        c:=a+b
+endsub

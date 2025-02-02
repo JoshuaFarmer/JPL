@@ -1,10 +1,10 @@
-call aaa
+include fib.a
 
-subroutine aaa
-        if a = 1
-                if b = 2
-                        c := a + b
-                        c :+ d
+subroutine main
+        while 1=1
+                if a = 20
+                        return
                 endif
-        endif
+                a := a + 1
+        endw
 endsub

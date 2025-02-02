@@ -2,6 +2,8 @@ TOK_ADD@  add eax,ebx
 TOK_SUB@  sub eax,ebx
 TOK_IF@  jnz M%d
 TOK_ENDIF@M%d:
+TOK_WHILE@  jnz M%d
+TOK_ENDWHILE@  jmp M%d\M%d:
 TOK_SUBR@  jmp $\S%s:
 TOK_ENDSUB@  ret
 TOK_CALL@  call S%s

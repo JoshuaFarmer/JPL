@@ -19,6 +19,9 @@ enum {
         TOK_ENDFN,
         TOK_CAL,
         TOK_IDE,
+        TOK_WHILE,
+        TOK_ENDW,
+        TOK_RET,
 };
 
 FILE * fout=NULL;
@@ -42,6 +45,7 @@ void emit_asm(char *fmt, ...) {
 }
 
 char ident[32];
+
 void next() {
         while (*src == ' ' || *src == '\t' || *src == '\n') src++;
         if (isalpha(*src)) {
@@ -54,9 +58,15 @@ void next() {
                         tok = TOK_IF;
                 } else if (strcmp(ident, "call") == 0) {
                         tok = TOK_CAL;
+                } else if (strcmp(ident, "while") == 0) {
+                        tok = TOK_WHILE;
+                } else if (strcmp(ident, "endw") == 0) {
+                        tok = TOK_ENDW;
                 } else if (strcmp(ident, "endif") == 0) {
                         tok = TOK_ENDIF;
                 } else if (strcmp(ident, "endsub") == 0) {
+                        tok = TOK_ENDFN;
+                } else if (strcmp(ident, "return") == 0) {
                         tok = TOK_ENDFN;
                 } else if (strcmp(ident, "subroutine") == 0) {
                         tok = TOK_FN;
@@ -109,7 +119,7 @@ int start=1;
 int           labels[256];
 unsigned char labelpos=0;
 
-char * TOK_TO_ASM[16];
+char * TOK_TO_ASM[18];
 
 enum
 {
@@ -129,6 +139,8 @@ enum
         TO_EMIT_SET_SUB,
         TO_EMIT_EQUAL,
         TO_EMIT_STOP,
+        TO_EMIT_WHILE,
+        TO_EMIT_ENDWHILE,
 };
 
 void expr()
@@ -146,10 +158,31 @@ void expr()
                 emit_asm(TOK_TO_ASM[TO_EMIT_IF],label++);
                 start=1;
         }
+        else if (tok == TOK_WHILE)
+        {
+                labels[labelpos++]=label;
+                emit_asm("M%d:\n",label++);
+                next();
+                while (tok)
+                {
+                        expr();
+                }
+
+                labels[labelpos++]=label;
+                emit_asm(TOK_TO_ASM[TO_EMIT_WHILE],label++);
+                start=1;
+        }
         else if (tok == TOK_ENDIF)
         {
                 int pos = labels[--labelpos];
                 emit_asm(TOK_TO_ASM[TO_EMIT_ENDIF],pos);
+                next();
+        }
+        else if (tok == TOK_ENDW)
+        {
+                int pos1 = labels[--labelpos];
+                int pos2 = labels[--labelpos];
+                emit_asm(TOK_TO_ASM[TO_EMIT_ENDWHILE],pos2,pos1);
                 next();
         }
         else if (tok == TOK_ENDFN)
@@ -292,6 +325,8 @@ void getArch(const char *self_location, const char *path) {
                 else if (strcmp(PROP,"TOK_ADD_SET")==0) { idx=TO_EMIT_SET_ADD; }
                 else if (strcmp(PROP,"TOK_SUB_SET")==0) { idx=TO_EMIT_SET_SUB; }
                 else if (strcmp(PROP,"TOK_ISEQUAL")==0) { idx=TO_EMIT_EQUAL; }
+                else if (strcmp(PROP,"TOK_WHILE")==0) { idx=TO_EMIT_WHILE; }
+                else if (strcmp(PROP,"TOK_ENDWHILE")==0) { idx=TO_EMIT_ENDWHILE; }
                 else if (strcmp(PROP,"HLT")==0) { idx=TO_EMIT_STOP; }
                 else
                 {
@@ -304,18 +339,24 @@ void getArch(const char *self_location, const char *path) {
         printf("Found Arch\n");
 }
 
-int main(int argc, char ** argv) {
-        if (argc != 4) return 1;
-        getArch(argv[0], argv[3]);
-        FILE * fp = fopen(argv[1],"r");
-        fout = fopen(argv[2],"wb");
-        if (!fp||!fout) return -2;
+void compile(const char * path)
+{
+        FILE * fp = fopen(path,"r");
+        if (!fp||!fout) {
+                printf("File does not exist: %s\n",path);
+                return;
+        }
         char buff[513];
-        src = buff;
         buff[512]=0;
-        emit_asm("start:\n");
         while (fgets(buff,512,fp))
         {
+                if (strncmp(buff,"include",7)==0)
+                {
+                        char * x = strtok(buff," ");
+                        char * include = strtok(NULL,"\n\r\0");
+                        compile(include);
+                        continue;
+                }
                 src=buff;
                 next();
                 start=1;
@@ -324,9 +365,18 @@ int main(int argc, char ** argv) {
                         expr();
                 }
         }
-        emit_asm(TOK_TO_ASM[TO_EMIT_STOP]);
         fclose(fp);
-        for (int i = 0; i < 16; ++i)
+}
+
+int main(int argc, char ** argv) {
+        if (argc != 4) return 1;
+        getArch(argv[0], argv[3]);
+        fout = fopen(argv[2],"wb");
+        emit_asm("start:\n");
+        emit_asm("  call Smain\n");
+        compile(argv[1]);
+        emit_asm(TOK_TO_ASM[TO_EMIT_STOP]);
+        for (int i = 0; i < 18; ++i)
         {
                 if (TOK_TO_ASM[i])
                 {
@@ -338,5 +388,6 @@ int main(int argc, char ** argv) {
         {
                 emit_asm("  dd 0\n",65+i);
         }
+        fclose(fout); fout = NULL;
         return 0;
 }
