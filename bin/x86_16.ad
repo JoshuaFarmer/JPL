@@ -1,0 +1,16 @@
+TOK_ADD@  add ax,bx
+TOK_SUB@  sub ax,bx
+TOK_IF@  jnz M%d
+TOK_ENDIF@M%d:
+TOK_SUBR@  jmp $\S%s:
+TOK_ENDSUB@  ret
+TOK_CALL@  call S%s
+TOK_VAR_GET_1@  mov ax,[vars+%d]
+TOK_VAR_GET_2@  mov bx,[vars+%d]
+TOK_NUM_1@  mov ax,%d
+TOK_NUM_2@  mov bx,%d
+TOK_SET@  mov word[vars+%d],ax
+TOK_ADD_SET@  add word[vars+%d],ax
+TOK_SUB_SET@  sub word[vars+%d],ax
+TOK_ISEQUAL@  cmp ax,bx\  setz al
+HLT@  jmp $

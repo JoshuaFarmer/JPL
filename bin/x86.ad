@@ -1,6 +1,6 @@
 TOK_ADD@  add eax,ebx
 TOK_SUB@  sub eax,ebx
-TOK_IF@  test al,al\  jz M%d
+TOK_IF@  jnz M%d
 TOK_ENDIF@M%d:
 TOK_SUBR@  jmp $\S%s:
 TOK_ENDSUB@  ret

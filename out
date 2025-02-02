@@ -2,24 +2,22 @@ start:
   call Saaa
   jmp $
 Saaa:
-  mov eax,[vars+0]
-  mov ebx,1
-  cmp eax,ebx
+  mov ax,[vars+0]
+  mov bx,1
+  cmp ax,bx
   setz al
-  test al,al
-  jz M0
-  mov eax,[vars+4]
-  mov ebx,2
-  cmp eax,ebx
+  jnz M0
+  mov ax,[vars+4]
+  mov bx,2
+  cmp ax,bx
   setz al
-  test al,al
-  jz M1
-  mov eax,[vars+0]
-  mov ebx,[vars+4]
-  add eax,ebx
-  mov dword[vars+8],eax
-  mov eax,[vars+12]
-  add dword[vars+8],eax
+  jnz M1
+  mov ax,[vars+0]
+  mov bx,[vars+4]
+  add ax,bx
+  mov word[vars+8],ax
+  mov ax,[vars+12]
+  add word[vars+8],ax
 M1:
 M0:
   ret
