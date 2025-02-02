@@ -1,0 +1,9 @@
+call aaa
+
+subroutine aaa
+        if a = 1
+                if b = 2
+                        c := a + b
+                endif
+        endif
+endsub
