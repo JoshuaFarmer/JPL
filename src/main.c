@@ -87,7 +87,7 @@ int variable_addr(char name)
 {
         if (name >= 'a' && name <= 'z')
         {
-                return 0xFFFF - ((name-'a') * 4) - 4;
+                return ((name-'a') * 4);
         }
 }
 
@@ -332,6 +332,11 @@ int main(int argc, char ** argv) {
                 {
                     free(TOK_TO_ASM[i]);
                 }
+        }
+        emit_asm("\nvars:\n");
+        for (int i = 0; i < 26; ++i)
+        {
+                emit_asm("  dd 0\n",65+i);
         }
         return 0;
 }
