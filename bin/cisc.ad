@@ -1,0 +1,16 @@
+TOK_ADD@  add a,b
+TOK_SUB@  sub a,b
+TOK_IF@  cmp a,0\  jz M%d
+TOK_ENDIF@M%d:
+TOK_SUBR@  halt\S%s:
+TOK_ENDSUB@  ret
+TOK_CALL@  call S%s
+TOK_VAR_GET_1@  mov a,[%d]
+TOK_VAR_GET_2@  mov b,[%d]
+TOK_NUM_1@  mov a,%d
+TOK_NUM_2@  mov b,%d
+TOK_SET@  mov [%d],a
+TOK_ADD_SET@  add [%d],a
+TOK_SUB_SET@  sub [%d],a
+TOK_ISEQUAL@  cmp a,b\  mzf
+HLT@  halt

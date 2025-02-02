@@ -4,6 +4,7 @@ subroutine aaa
         if a = 1
                 if b = 2
                         c := a + b
+                        c :+ d
                 endif
         endif
 endsub

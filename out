@@ -1,25 +1,26 @@
-	.org 0
-start
-	call aaa
-	halt
-aaa
-	mov a,[65531]
-	mov b,1
-	cmp a,b
-	mzf
-	cmp a,0
-	jz M0
-	mov a,[65527]
-	mov b,2
-	cmp a,b
-	mzf
-	cmp a,0
-	jz M1
-	mov a,[65531]
-	mov b,[65527]
-	add a,b
-	mov [65523],a
-M1
-M0
-	ret
-	halt
+start:
+  call Saaa
+  jmp $
+Saaa:
+  mov eax,[65531]
+  mov ebx,1
+  cmp eax,ebx
+  setz al
+  test al,al
+  jz M0
+  mov eax,[65527]
+  mov ebx,2
+  cmp eax,ebx
+  setz al
+  test al,al
+  jz M1
+  mov eax,[65531]
+  mov ebx,[65527]
+  add eax,ebx
+  mov dword[65523],eax
+  mov eax,[65519]
+  add dword[65523],eax
+M1:
+M0:
+  ret
+  jmp $
