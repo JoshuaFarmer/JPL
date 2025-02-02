@@ -369,25 +369,36 @@ void compile(const char * path)
 }
 
 int main(int argc, char ** argv) {
-        if (argc != 4) return 1;
-        getArch(argv[0], argv[3]);
-        fout = fopen(argv[2],"wb");
-        emit_asm("start:\n");
-        emit_asm("  call Smain\n");
-        compile(argv[1]);
-        emit_asm(TOK_TO_ASM[TO_EMIT_STOP]);
-        for (int i = 0; i < 18; ++i)
+        if (argc >= 4)
         {
-                if (TOK_TO_ASM[i])
+                getArch(argv[0], argv[3]);
+                fout = fopen(argv[2],"wb");
+                emit_asm("start:\n");
+                emit_asm("  call Smain\n");
+                if (argc == 5)
                 {
-                    free(TOK_TO_ASM[i]);
+                        FILE * fp = fopen(argv[4],"rb");
+                        if (!fp) return -2;
+                        char buff[8192];
+                        fread(buff,1,8192,fp);
+                        emit_asm(buff);
+                        fclose(fp); fp = NULL;
                 }
+                compile(argv[1]);
+                emit_asm(TOK_TO_ASM[TO_EMIT_STOP]);
+                for (int i = 0; i < 18; ++i)
+                {
+                        if (TOK_TO_ASM[i])
+                        {
+                        free(TOK_TO_ASM[i]);
+                        }
+                }
+                emit_asm("\nvars:\n");
+                for (int i = 0; i < 26; ++i)
+                {
+                        emit_asm("  dd 0\n",65+i);
+                }
+                fclose(fout); fout = NULL;
+                return 0;
         }
-        emit_asm("\nvars:\n");
-        for (int i = 0; i < 26; ++i)
-        {
-                emit_asm("  dd 0\n",65+i);
-        }
-        fclose(fout); fout = NULL;
-        return 0;
 }
