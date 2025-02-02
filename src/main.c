@@ -373,8 +373,6 @@ int main(int argc, char ** argv) {
         {
                 getArch(argv[0], argv[3]);
                 fout = fopen(argv[2],"wb");
-                emit_asm("start:\n");
-                emit_asm("  call Smain\n");
                 if (argc == 5)
                 {
                         FILE * fp = fopen(argv[4],"rb");
@@ -383,7 +381,11 @@ int main(int argc, char ** argv) {
                         fread(buff,1,8192,fp);
                         emit_asm(buff);
                         fclose(fp); fp = NULL;
+                        emit_asm("\n\n");
                 }
+                emit_asm("start:\n");
+                emit_asm("  call Smain\n");
+                emit_asm(TOK_TO_ASM[TO_EMIT_ENDSUB]);
                 compile(argv[1]);
                 emit_asm(TOK_TO_ASM[TO_EMIT_STOP]);
                 for (int i = 0; i < 18; ++i)
