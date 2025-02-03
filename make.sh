@@ -1,1 +1,1 @@
-gcc src/main.c -o bin/jplc
+gcc src/main.c -o bin/jplc -Os
