@@ -1,8 +1,8 @@
 TOK_ADD@  add ax,bx
 TOK_SUB@  sub ax,bx
-TOK_IF@  jz M%d
+TOK_IF@  jnz M%d
 TOK_ENDIF@M%d:
-TOK_WHILE@  jz M%d
+TOK_WHILE@  jnz M%d
 TOK_ENDWHILE@  jmp M%d\M%d:
 TOK_SUBR@  jmp $\S%s:
 TOK_ENDSUB@  ret
