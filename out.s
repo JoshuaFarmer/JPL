@@ -18,7 +18,7 @@ M0:
   mov ax,1
   mov bx,1
   cmp ax,bx
-  jz M1
+  jnz M1
   mov ax,[vars+0]
   mov bx,1
   add ax,bx

@@ -392,7 +392,7 @@ int main(int argc, char ** argv) {
                 {
                         if (TOK_TO_ASM[i])
                         {
-                        free(TOK_TO_ASM[i]);
+                                free(TOK_TO_ASM[i]);
                         }
                 }
                 emit_asm("\nvars:\n");
